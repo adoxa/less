@@ -2635,7 +2635,7 @@ WIN32textout(text, len)
 {
 #if MSDOS_COMPILER==WIN32C
 	DWORD written;
-	if (utf_mode == 2)
+	if (utf_mode >= 2)
 	{
 		/*
 		 * We've got UTF-8 text in a non-UTF-8 console.  Convert it to

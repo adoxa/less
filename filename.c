@@ -850,6 +850,10 @@ open_altfile(filename, pf, pfd)
 #if HAVE_FILENO
 	int returnfd = 0;
 #endif
+
+#if MSDOS_COMPILER==WIN32C
+	utf_mode &= 3;
+#endif
 	
 	if (!use_lessopen || secure)
 		return (NULL);
@@ -934,7 +938,24 @@ open_altfile(filename, pf, pfd)
 			return (NULL);
 		}
 		/* Alt pipe contains data, so use it. */
+#if MSDOS_COMPILER==WIN32C
+		else if (strcmp(lessopen, "lessutf %s") == 0)
+		{
+			if (strcmp(filename, "-") == 0)
+			{
+				if (!utf_mode && c)
+					utf_mode = 4;
+			}
+			else
+			{
+				if (!utf_mode)
+					utf_mode = 4;
+				ch_ungetchar(c);
+			}
+		}
+#else
 		ch_ungetchar(c);
+#endif
 		*pfd = (void *) fd;
 		*pf = f;
 		return (save("-"));
