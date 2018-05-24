@@ -6,15 +6,21 @@
 CC = cl
 
 # Normal flags
-CFLAGS = /nologo /W3 /EHsc /O2 /I "." /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /c 
-LDFLAGS = /nologo /subsystem:console /incremental:no
+CFLAGS = /nologo /MD /W3 /EHsc /O2 /I "." /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /c 
+LDFLAGS = /nologo /subsystem:console /incremental:no /filealign:512
 
 # Debugging flags
 #CFLAGS = /nologo /MDd /W3 /GX /Od /Gm /Zi /I "." /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /c
 #LDFLAGS = /nologo /subsystem:console /incremental:yes /debug
 
 LD = link
-LIBS = user32.lib
+LIBS = user32.lib pcre-j.lib
+
+V = 0
+!IF $V == 0
+CC = @$(CC)
+LD = @echo $@&@$(LD)
+!ENDIF
 
 #### End of system configuration section. ####
 
@@ -29,7 +35,7 @@ OBJ = \
 	help.obj ifile.obj input.obj jump.obj line.obj linenum.obj \
 	lsystem.obj mark.obj optfunc.obj option.obj opttbl.obj os.obj \
 	output.obj pattern.obj position.obj prompt.obj search.obj signal.obj \
-	tags.obj ttyin.obj version.obj regexp.obj
+	tags.obj ttyin.obj version.obj
 
 all: less.exe lesskey.exe
 
