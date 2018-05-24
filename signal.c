@@ -107,8 +107,7 @@ winch(type)
 #include <windows.h>
 
 	static BOOL WINAPI 
-wbreak_handler(dwCtrlType)
-	DWORD dwCtrlType;
+wbreak_handler(DWORD dwCtrlType)
 {
 	switch (dwCtrlType)
 	{
@@ -124,8 +123,12 @@ wbreak_handler(dwCtrlType)
 #endif
 
 	static RETSIGTYPE
+#ifdef _MSC_VER
+terminate(int type)
+#else
 terminate(type)
 	int type;
+#endif
 {
 	quit(15);
 }
