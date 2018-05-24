@@ -508,7 +508,8 @@ opt__V(type, s)
 		putstr(" (");
 		putstr(pattern_lib_name());
 		putstr(" regular expressions)\n");
-		putstr("@@copyright_oneline@@\n\n");
+		putstr("@@copyright_oneline@@\n");
+		putstr("Word wrapping by Jason Hood (http://less.adoxa.vze.com/)\n\n");
 		putstr("less comes with NO WARRANTY, to the extent permitted by law.\n");
 		putstr("For information about the terms of redistribution,\n");
 		putstr("see the file named README in the less distribution.\n");

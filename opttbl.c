@@ -35,6 +35,7 @@ public int jump_sline;		/* Screen line of "jump target" */
 public long jump_sline_fraction = -1;
 public long shift_count_fraction = -1;
 public int chopline;		/* Truncate displayed lines at screen width */
+public int wordwrap;		/* Fold lines at word boundaries */
 public int no_init;		/* Disable sending ti/te termcap strings */
 public int no_keypad;		/* Disable sending ks/ke termcap strings */
 public int twiddle;             /* Show tildes after EOF */
@@ -104,6 +105,7 @@ static struct optname t_optname      = { "tag",                  NULL };
 static struct optname T__optname     = { "tag-file",             NULL };
 #endif
 static struct optname u_optname      = { "underline-special",    NULL };
+static struct optname v_optname      = { "edge-wrap",            NULL };
 static struct optname V__optname     = { "version",              NULL };
 static struct optname w_optname      = { "hilite-unread",        NULL };
 static struct optname x_optname      = { "tabs",                 NULL };
@@ -362,6 +364,14 @@ static struct loption option[] =
 			"Display underlined text in underline mode",
 			"Backspaces cause overstrike",
 			"Print backspace as ^H"
+		}
+	},
+	{ 'v', &v_optname,
+		BOOL|REPAINT, OPT_ON, &wordwrap, NULL,
+		{
+			"Fold lines at screen edge",
+			"Fold lines at start of word",
+			NULL
 		}
 	},
 	{ 'V', &V__optname,

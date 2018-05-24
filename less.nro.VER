@@ -11,7 +11,7 @@ less \- opposite of more
 .br
 .B "less \-\-version"
 .br
-.B "less [\-[+]aABcCdeEfFgGiIJKLmMnNqQrRsSuUVwWX~]"
+.B "less [\-[+]aABcCdeEfFgGiIJKLmMnNqQrRsSuUvVwWX~]"
 .br
 .B "     [\-b \fIspace\/\fP] [\-h \fIlines\/\fP] [\-j \fIline\/\fP] [\-k \fIkeyfile\/\fP]"
 .br
@@ -882,6 +882,9 @@ Carriage returns immediately followed by a newline are deleted.
 Other carriage returns are handled as specified by the \-r option.
 Text which is overstruck or underlined can be searched for
 if neither \-u nor \-U is in effect.
+.IP "\-v or \-\-edge-wrap"
+If lines are being folded (see the \-S option), the fold will occur at
+the edge of the screen, rather than the previous (non-leading) space.
 .IP "\-V or \-\-version"
 Displays the version number of
 .IR less .

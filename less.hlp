@@ -185,6 +185,8 @@
                   Use an alternate tags file.
   -u  -U  ....  --underline-special  --UNDERLINE-SPECIAL
                   Change handling of backspaces.
+  -v  ........  --edge-wrap
+                  Fold lines at the edge of the screen.
   -V  ........  --version
                   Display the version number of "less".
   -w  ........  --hilite-unread
