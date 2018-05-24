@@ -16,6 +16,7 @@ public int how_search;		/* Where should forward searches start? */
 public int top_scroll;		/* Repaint screen from top?
 				   (alternative is scroll from bottom) */
 public int pr_type;		/* Type of prompt (short, medium, long) */
+public int pr_hide;		/* Hide the prompt? */
 public int bs_mode;		/* How to process backspaces */
 public int know_dumb;		/* Don't complain about dumb terminals */
 public int quit_at_eof;		/* Quit after hitting end of file twice */
@@ -110,6 +111,7 @@ static struct optname x_optname      = { "tabs",                 NULL };
 static struct optname X__optname     = { "no-init",              NULL };
 static struct optname y_optname      = { "max-forw-scroll",      NULL };
 static struct optname z_optname      = { "window",               NULL };
+static struct optname Z_optname      = { "no-prompt",            NULL };
 static struct optname quote_optname  = { "quotes",               NULL };
 static struct optname tilde_optname  = { "tilde",                NULL };
 static struct optname query_optname  = { "help",                 NULL };
@@ -405,6 +407,14 @@ static struct loption option[] =
 		{
 			"Scroll window size: ",
 			"Scroll window size is %d lines",
+			NULL
+		}
+	},
+	{ 'Z', &Z_optname,
+		BOOL, OPT_OFF, &pr_hide, NULL,
+		{
+			"Show the prompt",
+			"Hide the prompt",
 			NULL
 		}
 	},

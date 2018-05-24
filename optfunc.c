@@ -23,6 +23,7 @@
 extern int nbufs;
 extern int bufspace;
 extern int pr_type;
+extern int pr_hide;
 extern int plusoption;
 extern int swindow;
 extern int sc_width;
@@ -891,6 +892,6 @@ get_swindow(VOID_PARAM)
 {
 	if (swindow > 0)
 		return (swindow);
-	return (sc_height + swindow);
+	return (sc_height + swindow + pr_hide);
 }
 

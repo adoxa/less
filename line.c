@@ -70,6 +70,7 @@ extern int ul_s_width, ul_e_width;
 extern int bl_s_width, bl_e_width;
 extern int so_s_width, so_e_width;
 extern int sc_width, sc_height;
+extern int pr_hide;
 extern int utf_mode;
 extern POSITION start_attnpos;
 extern POSITION end_attnpos;
@@ -1353,6 +1354,8 @@ rrshift(VOID_PARAM)
 		if (end_column > longest)
 			longest = end_column;
 	}
+	if (pr_hide && longest == end_column && line == sc_height)
+		longest++;
 	sc_width = save_width;
 	if (longest < sc_width)
 		return 0;

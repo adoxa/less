@@ -43,7 +43,8 @@ extern int vt_enabled;
  * Display the line which is in the line buffer.
  */
 	public void
-put_line(VOID_PARAM)
+put_line(nl)
+	int nl;
 {
 	int c;
 	int i;
@@ -66,7 +67,7 @@ put_line(VOID_PARAM)
 		final_attr = a;
 		if (c == '\b')
 			putbs();
-		else
+		else if (nl || c != '\n')
 			putchr(c);
 	}
 

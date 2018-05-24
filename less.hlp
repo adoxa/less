@@ -199,6 +199,8 @@
                   Forward scroll limit.
   -z [_N]  ....  --window=[_N]
                   Set size of window.
+  -Z  ........  --no-prompt
+                  Don't show the prompt.
   -" [_c[_c]]  .  --quotes=[_c[_c]]
                   Set shell quote characters.
   -~  ........  --tilde
