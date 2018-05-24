@@ -11,7 +11,7 @@ less \- opposite of more
 .br
 .B "less \-\-version"
 .br
-.B "less [\-[+]aABcCdeEfFgGiIJKLmMnNqQrRsSuUVwWX~]"
+.B "less [\-[+]aABcCdeEfFgGiIJKlLmMnNqQrRsSuUVwWX~]"
 .br
 .B "     [\-b \fIspace\/\fP] [\-h \fIlines\/\fP] [\-j \fIline\/\fP] [\-k \fIkeyfile\/\fP]"
 .br
@@ -690,6 +690,8 @@ Normally, an interrupt character causes
 to stop whatever it is doing and return to its command prompt.
 Note that use of this option makes it impossible to return to the
 command prompt from the "F" command.
+.IP "\-l or \-\-double-space"
+Add a blank line between each line.
 .IP "\-L or \-\-no-lessopen"
 Ignore the LESSOPEN environment variable
 (see the INPUT PREPROCESSOR section below).

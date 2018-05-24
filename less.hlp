@@ -157,6 +157,8 @@
                   Use a lesskey file.
   -K  ........  --quit-on-intr
                   Exit less in response to ctrl-C.
+  -l  ........  --double-space
+                  Add a blank line between each line.
   -L  ........  --no-lessopen
                   Ignore the LESSOPEN environment variable.
   -m  -M  ....  --long-prompt  --LONG-PROMPT

@@ -35,6 +35,7 @@ public int jump_sline;		/* Screen line of "jump target" */
 public long jump_sline_fraction = -1;
 public long shift_count_fraction = -1;
 public int chopline;		/* Truncate displayed lines at screen width */
+public int double_space;	/* Add a blank line between each line */
 public int no_init;		/* Disable sending ti/te termcap strings */
 public int no_keypad;		/* Disable sending ks/ke termcap strings */
 public int twiddle;             /* Show tildes after EOF */
@@ -85,6 +86,7 @@ static struct optname J__optname     = { "status-column",        NULL };
 static struct optname k_optname      = { "lesskey-file",         NULL };
 #endif
 static struct optname K__optname     = { "quit-on-intr",         NULL };
+static struct optname l_optname      = { "double-space",         NULL };
 static struct optname L__optname     = { "no-lessopen",          NULL };
 static struct optname m_optname      = { "long-prompt",          NULL };
 static struct optname n_optname      = { "line-numbers",         NULL };
@@ -269,6 +271,14 @@ static struct loption option[] =
 		{
 			"Interrupt (ctrl-C) returns to prompt",
 			"Interrupt (ctrl-C) exits less",
+			NULL
+		}
+	},
+	{ 'l', &l_optname,
+		BOOL|REPAINT, OPT_OFF, &double_space, NULL,
+		{
+			"Single space",
+			"Double space",
 			NULL
 		}
 	},

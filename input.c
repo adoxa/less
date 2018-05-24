@@ -14,6 +14,7 @@
 
 extern int squeeze;
 extern int chopline;
+extern int double_space;
 extern int hshift;
 extern int quit_if_one_screen;
 extern int sigs;
@@ -25,6 +26,7 @@ extern POSITION end_attnpos;
 extern int hilite_search;
 extern int size_linebuf;
 #endif
+static int double_line;
 
 /*
  * Get the next line.
@@ -44,6 +46,21 @@ forw_line(curr_pos)
 	int endline;
 	int chopped;
 	int backchars;
+
+	if (double_space && !double_line)
+	{
+		/*
+		 * Before we get the start of this line, add a blank before it.
+		 */
+		if (!ch_seek(curr_pos-1) && ch_forw_get() == '\n')
+		{
+			double_line = TRUE;
+			prewind();
+			pdone(TRUE, FALSE, 1);
+			return (curr_pos);
+		}
+	}
+	double_line = FALSE;
 
 get_forw_line:
 	if (curr_pos == NULL_POSITION)
@@ -252,6 +269,21 @@ back_line(curr_pos)
 	int endline;
 	int chopped;
 	int backchars;
+
+	if (double_space && !double_line)
+	{
+		/*
+		 * Before we move off this line, add a blank before it.
+		 */
+		if (!ch_seek(curr_pos-1) && ch_forw_get() == '\n')
+		{
+			double_line = TRUE;
+			prewind();
+			pdone(TRUE, FALSE, 0);
+			return (curr_pos);
+		}
+	}
+	double_line = FALSE;
 
 get_back_line:
 	if (curr_pos == NULL_POSITION || curr_pos <= ch_zero())
