@@ -114,8 +114,9 @@ static struct pattern_info *filter_infos = NULL;
  * Are there any uppercase letters in this string?
  */
 	static int
-is_ucase(str)
+is_ucase(str, escape)
 	char *str;
+	int escape;
 {
 	char *str_end = str + strlen(str);
 	LWCHAR ch;
@@ -123,7 +124,9 @@ is_ucase(str)
 	while (str < str_end)
 	{
 		ch = step_char(&str, +1, str_end);
-		if (IS_UPPER(ch))
+		if (ch == '\\' && escape)
+			step_char(&str, +1, str_end);
+		else if (IS_UPPER(ch))
 			return (1);
 	}
 	return (0);
@@ -174,7 +177,7 @@ set_pattern(info, pattern, search_type)
 	 * Ignore case if -I is set OR
 	 * -i is set AND the pattern is all lowercase.
 	 */
-	is_ucase_pattern = is_ucase(pattern);
+	is_ucase_pattern = is_ucase(pattern, !(search_type & SRCH_NO_REGEX));
 	if (is_ucase_pattern && caseless != OPT_ONPLUS)
 		is_caseless = 0;
 	else
