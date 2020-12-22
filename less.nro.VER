@@ -11,7 +11,7 @@ less \- opposite of more
 .br
 .B "less \-\-version"
 .br
-.B "less [\-[+]aABcCdeEfFgGiIJKlLmMnNqQrRsSuUVwWX~]"
+.B "less [\-[+]aABcCdeEfFgGiIJKlLmMnNqQrRsSuUVwWXZ~]"
 .br
 .B "     [\-b \fIspace\/\fP] [\-h \fIlines\/\fP] [\-j \fIline\/\fP] [\-k \fIkeyfile\/\fP]"
 .br
@@ -933,6 +933,8 @@ lines less than the current screen size.
 For example, if the screen is 24 lines, \fI\-z\-4\fP sets the
 scrolling window to 20 lines.  If the screen is resized to 40 lines,
 the scrolling window automatically changes to 36 lines.
+.IP "\-Z or \-\-no-prompt"
+Disables the prompt, providing an extra line of text.
 .IP "\-\(dq\fIcc\fP\ or\ \-\-quotes=\fIcc\fP"
 Changes the filename quoting character.
 This may be necessary if you are trying to name a file

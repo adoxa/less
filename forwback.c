@@ -25,6 +25,8 @@ extern int ignore_eoi;
 extern int clear_bg;
 extern int final_attr;
 extern int oldbot;
+extern int pr_hide;
+extern POSITION pr_line_pos;
 #if HILITE_SEARCH
 extern int size_linebuf;
 extern int hilite_search;
@@ -70,7 +72,8 @@ eof_displayed(VOID_PARAM)
 	 * we must be just at EOF.
 	 */
 	pos = position(BOTTOM_PLUS_ONE);
-	return (pos == NULL_POSITION || pos == ch_length());
+	return (pos == NULL_POSITION || pos == ch_length() || (pr_hide &&
+		 (pr_line_pos == NULL_POSITION || pr_line_pos == ch_length())));
 }
 
 /*
@@ -252,7 +255,7 @@ forw(n, pos, force, only_last, nblank)
 			squished = 1;
 			continue;
 		}
-		put_line();
+		put_line(TRUE);
 #if 0
 		/* {{ 
 		 * Can't call clear_eol here.  The cursor might be at end of line
@@ -333,7 +336,7 @@ back(n, pos, force, only_last)
 		{
 			home();
 			add_line();
-			put_line();
+			put_line(TRUE);
 		}
 	}
 

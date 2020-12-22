@@ -281,7 +281,7 @@ repaint_hilite(on)
 			continue;
 		(void) forw_line(pos);
 		goto_line(sindex);
-		put_line();
+		put_line(TRUE);
 	}
 	lower_left();
 	hide_hilite = save_hide_hilite;
@@ -325,7 +325,7 @@ clear_attn(VOID_PARAM)
 		{
 			(void) forw_line(pos);
 			goto_line(sindex);
-			put_line();
+			put_line(TRUE);
 			moved = 1;
 		}
 	}

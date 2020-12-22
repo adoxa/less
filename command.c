@@ -13,12 +13,15 @@
 #include "option.h"
 #include "cmd.h"
 
+public POSITION pr_line_pos;
+
 extern int erase_char, erase2_char, kill_char;
 extern int sigs;
 extern int quit_if_one_screen;
 extern int squished;
 extern int sc_width;
 extern int sc_height;
+extern int pr_hide;
 extern char *kent;
 extern int swindow;
 extern int jump_sline;
@@ -786,24 +789,37 @@ prompt(VOID_PARAM)
 		clear_bot();
 	clear_cmd();
 	forw_prompt = 0;
-	p = pr_string();
-	if (is_filtering())
-		putstr("& ");
-	if (p == NULL || *p == '\0')
-		putchr(':');
+	if (pr_hide)
+	{
+		/*
+		 * Avoid writing to the last character of the last line.
+		 */
+		--sc_width;
+		pr_line_pos = forw_line(bottompos);
+		put_line(FALSE);
+		++sc_width;
+	}
 	else
 	{
+		p = pr_string();
+		if (is_filtering())
+			putstr("& ");
+		if (p == NULL || *p == '\0')
+			putchr(':');
+		else
+		{
 #if MSDOS_COMPILER==WIN32C
-		WCHAR w[MAX_PATH*2];
-		char  a[MAX_PATH*2];
-		MultiByteToWideChar(CP_ACP, 0, p, -1, w, sizeof(w)/sizeof(*w));
-		WideCharToMultiByte(utf_mode ? CP_UTF8 : GetConsoleOutputCP(),
-		                    0, w, -1, a, sizeof(a), NULL, NULL);
-		p = a;
+			WCHAR w[MAX_PATH*2];
+			char  a[MAX_PATH*2];
+			MultiByteToWideChar(CP_ACP, 0, p, -1, w, sizeof(w)/sizeof(*w));
+			WideCharToMultiByte(utf_mode ? CP_UTF8 : GetConsoleOutputCP(),
+					    0, w, -1, a, sizeof(a), NULL, NULL);
+			p = a;
 #endif
-		at_enter(AT_STANDOUT);
-		putstr(p);
-		at_exit();
+			at_enter(AT_STANDOUT);
+			putstr(p);
+			at_exit();
+		}
 	}
 	clear_eol();
 }

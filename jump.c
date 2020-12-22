@@ -12,6 +12,7 @@ extern int jump_sline;
 extern int squished;
 extern int screen_trashed;
 extern int sc_width, sc_height;
+extern int pr_hide;
 extern int show_attn;
 extern int top_scroll;
 
@@ -43,6 +44,8 @@ jump_forw(VOID_PARAM)
 	pos_clear();
 	end_pos = ch_tell();
 	pos = back_line(end_pos);
+	if (pr_hide && pos != NULL_POSITION)
+		pos = back_line(pos);
 	if (pos == NULL_POSITION)
 		jump_loc(ch_zero(), sc_height-1);
 	else
@@ -67,7 +70,14 @@ jump_forw_buffered(VOID_PARAM)
 		return;
 	}
 	end = ch_tell();
-	if (end != NULL_POSITION && end > 0)
+	if (pr_hide)
+	{
+		end = back_line(back_line(end));
+		if (end == NULL_POSITION)
+			end = ch_zero();
+		jump_line_loc(end, sc_height-1);
+	}
+	else if (end != NULL_POSITION && end > 0)
 		jump_line_loc(end-1, sc_height-1);
 }
 
