@@ -82,6 +82,9 @@ static int mbc_buf_len = 0;
 static int mbc_buf_index = 0;
 static POSITION mbc_pos;
 
+static int saved_line_end;
+static int saved_end_column;
+
 /* State while processing an ANSI escape sequence */
 struct ansi_state {
 	int hindex;   /* Index into hyperlink prefix */
@@ -451,6 +454,26 @@ backc(VOID_PARAM)
 		ch = prev_ch;
 	}
 	return (1);
+}
+
+/*
+ * Preserve the current position in the line buffer (for word wrapping).
+ */
+	public void
+savec(VOID_PARAM)
+{
+	saved_line_end = linebuf.end;
+	saved_end_column = end_column;
+}
+
+/*
+ * Restore the position in the line buffer (start of line for word wrapping).
+ */
+	public void
+loadc(VOID_PARAM)
+{
+	linebuf.end = saved_line_end;
+	end_column = saved_end_column;
 }
 
 /*

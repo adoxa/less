@@ -11,10 +11,12 @@
  */
 
 #include "less.h"
+#include "position.h"
 
 extern int squeeze;
-extern int chopline;
 extern int double_space;
+extern int chopline;
+extern int wordwrap;
 extern int hshift;
 extern int quit_if_one_screen;
 extern int sigs;
@@ -46,6 +48,8 @@ forw_line(curr_pos)
 	int endline;
 	int chopped;
 	int backchars;
+	POSITION wrap_pos;
+	int skipped_leading;
 
 	if (double_space && !double_line)
 	{
@@ -131,6 +135,15 @@ get_forw_line:
 		if (backchars > 0)
 		{
 			pshift_all();
+			if (wordwrap && (c == ' ' || c == '\t'))
+			{
+				do
+				{
+					new_pos++;
+					c = ch_forw_get();
+				} while (c == ' ' || c == '\t');
+				backchars = 1;
+			}
 			new_pos -= backchars;
 			while (--backchars >= 0)
 				(void) ch_back_get();
@@ -149,6 +162,9 @@ get_forw_line:
 		return (NULL_POSITION);
 	}
 	blankline = (c == '\n' || c == '\r');
+
+	wrap_pos = NULL_POSITION;
+	skipped_leading = FALSE;
 
 	/*
 	 * Read each character in the line and append to the line buffer.
@@ -207,10 +223,48 @@ get_forw_line:
 				chopped = TRUE;
 			} else
 			{
-				new_pos = ch_tell() - backchars;
+				if (!wordwrap)
+					new_pos = ch_tell() - backchars;
+				else
+				{
+					/*
+					 * We're word-wrapping, so go back to the last space.
+					 * However, if it's the space itself that couldn't fit,
+					 * simply ignore it and any subsequent spaces.
+					 */
+					if (c == ' ' || c == '\t')
+					{
+						do
+						{
+							new_pos = ch_tell();
+							c = ch_forw_get();
+						} while (c == ' ' || c == '\t');
+						if (c == '\r')
+							c = ch_forw_get();
+						if (c == '\n')
+							new_pos = ch_tell();
+					} else if (wrap_pos == NULL_POSITION)
+						new_pos = ch_tell() - backchars;
+					else
+					{
+						new_pos = wrap_pos;
+						loadc();
+					}
+				}
 				endline = FALSE;
 			}
 			break;
+		} else if (wordwrap)
+		{
+			if (c == ' ' || c == '\t')
+			{
+				if (skipped_leading)
+				{
+					wrap_pos = ch_tell();
+					savec();
+				}
+			} else
+				skipped_leading = TRUE;
 		}
 		c = ch_forw_get();
 	}
@@ -269,6 +323,8 @@ back_line(curr_pos)
 	int endline;
 	int chopped;
 	int backchars;
+	POSITION wrap_pos;
+	int skipped_leading;
 
 	if (double_space && !double_line)
 	{
@@ -385,6 +441,8 @@ get_back_line:
 	prewind();
 	plinestart(new_pos);
     loop:
+	wrap_pos = NULL_POSITION;
+	skipped_leading = FALSE;
 	begin_new_pos = new_pos;
 	(void) ch_seek(new_pos);
 	chopped = FALSE;
@@ -425,13 +483,53 @@ get_back_line:
 				break;
 			}
 		shift:
-			pshift_all();
-			while (backchars-- > 0)
+			if (!wordwrap)
 			{
-				(void) ch_back_get();
-				new_pos--;
+				pshift_all();
+				new_pos -= backchars;
+			} else
+			{
+				if (c == ' ' || c == '\t')
+				{
+					for (;;)
+					{
+						c = ch_forw_get();
+						if (c == ' ' || c == '\t')
+							new_pos++;
+						else
+						{
+							if (c == '\r')
+							{
+								c = ch_forw_get();
+								if (c == '\n')
+									new_pos++;
+							}
+							if (c == '\n')
+								new_pos++;
+							break;
+						}
+					}
+					if (new_pos >= curr_pos)
+						break;
+					pshift_all();
+				} else
+				{
+					pshift_all();
+					if (wrap_pos == NULL_POSITION)
+						new_pos -= backchars;
+					else
+						new_pos = wrap_pos;
+				}
 			}
 			goto loop;
+		} else if (wordwrap)
+		{
+			if (c == ' ' || c == '\t')
+			{
+				if (skipped_leading)
+					wrap_pos = new_pos;
+			} else
+				skipped_leading = TRUE;
 		}
 	} while (new_pos < curr_pos);
 
