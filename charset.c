@@ -729,9 +729,11 @@ step_char(pp, dir, limit)
 #define DECLARE_RANGE_TABLE_END(name) \
     }; struct wchar_range_table name##_table = { name##_array, sizeof(name##_array)/sizeof(*name##_array) };
 
+#if !MSDOS_COMPILER
 DECLARE_RANGE_TABLE_START(compose)
 #include "compose.uni"
 DECLARE_RANGE_TABLE_END(compose)
+#endif
 
 DECLARE_RANGE_TABLE_START(ubin)
 #include "ubin.uni"
@@ -745,10 +747,12 @@ DECLARE_RANGE_TABLE_START(fmt)
 #include "fmt.uni"
 DECLARE_RANGE_TABLE_END(fmt)
 
+#if !MSDOS_COMPILER
 /* comb_table is special pairs, not ranges. */
 static struct wchar_range comb_table[] = {
 	{0x0644,0x0622}, {0x0644,0x0623}, {0x0644,0x0625}, {0x0644,0x0627},
 };
+#endif
 
 
 	static int
@@ -785,8 +789,12 @@ is_in_table(ch, table)
 is_composing_char(ch)
 	LWCHAR ch;
 {
+#if !MSDOS_COMPILER
 	return is_in_table(ch, &compose_table) ||
 	       (bs_mode != BS_CONTROL && is_in_table(ch, &fmt_table));
+#else
+	return 0;
+#endif
 }
 
 /*
@@ -833,6 +841,7 @@ is_combining_char(ch1, ch2)
 	LWCHAR ch1;
 	LWCHAR ch2;
 {
+#if !MSDOS_COMPILER
 	/* The table is small; use linear search. */
 	int i;
 	for (i = 0;  i < sizeof(comb_table)/sizeof(*comb_table);  i++)
@@ -841,6 +850,7 @@ is_combining_char(ch1, ch2)
 		    ch2 == comb_table[i].last)
 			return 1;
 	}
+#endif
 	return 0;
 }
 
